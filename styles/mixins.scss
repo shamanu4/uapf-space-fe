@@ -1,0 +1,45 @@
+// Base
+@mixin mediaQueryXs() {
+  @media (max-width: $media-query-xs) {
+    @content;
+  }
+}
+@mixin mediaQuerySm() {
+  @media (min-width: $media-query-sm) {
+    @content;
+  }
+}
+@mixin mediaQueryMd() {
+  @media (min-width: $media-query-md) {
+    @content;
+  }
+}
+@mixin mediaQueryLg() {
+  @media (min-width: $media-query-lg) {
+    @content;
+  }
+}
+@mixin mediaQueryXl() {
+  @media (min-width: $media-query-xl) {
+    @content;
+  }
+}
+
+// General
+@mixin mediaQueryMax($value) {
+  @media (max-width: #{$value}) {
+    @content;
+  }
+}
+
+@mixin mediaQueryMin($value) {
+  @media (min-width: #{$value}) {
+    @content;
+  }
+}
+
+@mixin mediaQueryMinMax($min, $max) {
+  @media (min-width: #{$min + 1px}) and (max-width: #{$max}) {
+    @content;
+  }
+}
