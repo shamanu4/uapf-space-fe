@@ -15,16 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - 
-        name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        name: Set ref
+        id: ref
+        run: echo ::set-output name=ref::${GITHUB_REF#refs/*/}
+      - 
+        name: Set tag
+        id: tag
+        run: echo ::set-output name=$(echo ${{ steps.vars.outputs.ref }} | sed "s/[^[:alnum:]]/./g")
       - 
         name: Check output
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
+          echo ref=${{ steps.vars.outputs.ref }}
+          echo tag=${{ steps.vars.outputs.tag }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -44,7 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: latest, ${{ steps.vars.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:latest, ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:${{ steps.vars.outputs.tag }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
