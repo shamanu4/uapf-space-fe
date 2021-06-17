@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: shamanu4/uapf-space-fe:latest, shamanu4/uapf-space-fe:${{ steps.vars.outputs.tag }}
+          tags: latest, ${{ steps.vars.outputs.tag }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
