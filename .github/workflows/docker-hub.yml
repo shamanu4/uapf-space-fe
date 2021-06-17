@@ -4,11 +4,27 @@ on:
   push:
     branches:
       - 'master'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - 
+        name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - 
+        name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -27,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: shamanu4/uapf-space-fe:latest
+          tags: shamanu4/uapf-space-fe:latest, shamanu4/uapf-space-fe:${{ steps.vars.outputs.tag }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
