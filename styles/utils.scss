@@ -1,0 +1,27 @@
+%container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+
+  @include mediaQueryMin($media-query-xl) {
+    max-width: $container-xl-max-width;
+    padding-right: $container-xl-padding;
+    padding-left: $container-xl-padding;
+  }
+}
+
+%clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+%word-break {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+}
