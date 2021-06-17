@@ -15,20 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - 
-        name: Set ref
-        id: ref
-        run: echo ::set-output name=ref::${GITHUB_REF#refs/*/}
-      - 
-        name: Set tag
-        id: tag
-        run: echo ::set-output name=$(echo ${{ steps.vars.outputs.ref }} | sed "s/[^[:alnum:]]/./g")
-      - 
-        name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        name: Declare some variables
+        id: vars
+        shell: bash
         run: |
-          echo ref=${{ steps.vars.outputs.ref }}
-          echo tag=${{ steps.vars.outputs.tag }}
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/} | sed "s/[^[:alnum:]]/./g)"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      -
+        name: Another step
+        run: |
+          echo "Branch: ${{ steps.vars.outputs.branch }}"
+          echo "Sha: ${{ steps.vars.outputs.sha_short }}"
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -48,7 +45,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:latest, ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:${{ steps.vars.outputs.tag }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:latest, ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:${{ steps.vars.outputs.branch }}.${{ steps.vars.outputs.sha_short }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
