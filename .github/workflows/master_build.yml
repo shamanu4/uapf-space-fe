@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - 'master'
-    tags:
-      - '*'
-  pull_request:
-    branches:
-      - '**'
 
 jobs:
   docker:
@@ -32,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:latest, ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:${{ github.head_ref }}.${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/uapf-space-fe:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
