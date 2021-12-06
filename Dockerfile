@@ -2,6 +2,8 @@ FROM node:alpine as builder
 RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
+ENV NODE_OPTIONS --openssl-legacy-provider
+
 COPY . .
 RUN ls
 RUN npm i && npm run build
